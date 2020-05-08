@@ -15,6 +15,39 @@ namespace BestBuyCRUD
             {
                 Console.WriteLine(dept);
             }
+            var response = "";
+            do
+            {
+                Console.WriteLine("Would you like to add a new Department?");
+                Console.WriteLine("\n     Type Y for yes \n     or type EXIT to exit the program");
+                response = Console.ReadLine().ToUpper();
+
+                if (response == "Y")
+                {
+                    Console.WriteLine("What is the name of the new department?");
+
+                    var departmentName = Console.ReadLine();
+                    CreateDepartment(departmentName);
+                }
+
+            } while (response != "EXIT");
+           do
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Would you like to add a new Department?");
+                Console.WriteLine("\n     Type Y for yes \n     or type EXIT to exit the program");
+                response = Console.ReadLine().ToUpper();
+
+                if (response == "Y")
+                {
+                    Console.WriteLine("What is the name of the new department?");
+
+                    var departmentName = Console.ReadLine();
+                    CreateDepartment(departmentName);
+                }
+
+            } while (response != "EXIT");
+
         }
 
         static IEnumerable GetAllDepartments()
@@ -59,7 +92,25 @@ namespace BestBuyCRUD
                 cmd.ExecuteNonQuery();
             }
         }
+        static void UpdateDepartment(string currentName, string newDepartmentName)
+        {
+            var connStr = System.IO.File.ReadAllText("ConnectionString.txt");
+            using (var conn = new MySqlConnection(connStr))
+            {
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                // parameterized query to prevent SQL Injection
+                cmd.CommandText = "UPDATE departments SET Name = @newDepartmentName WHERE Name = @currentName;";
+                //this method gives our parameter above, ^^@departmentName, a value
+                cmd.Parameters.AddWithValue("currentName", currentName);
+                cmd.Parameters.AddWithValue("newDepartmentName", newDepartmentName);
+                cmd.ExecuteNonQuery();
+                
+            }
+        }
 
+    }
+        }
     }
 }
 
